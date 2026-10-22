@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+  <stop offset="0" stop-color="#26A69A"/><stop offset="1" stop-color="#00695C"/></linearGradient></defs>
+  <rect width="1024" height="1024" fill="url(#g)"/>
+  <g transform="translate(512 512) scale(1.08) translate(-512 -512)">
+    <path d="M300 330 L640 250 Q676 242 684 278 L698 340 Z" fill="#B2DFDB"/>
+    <rect x="232" y="330" width="560" height="400" rx="72" fill="#FFFFFF"/>
+    <rect x="232" y="330" width="560" height="92" rx="46" fill="#E0F2F1"/>
+    <rect x="232" y="380" width="560" height="42" fill="#E0F2F1"/>
+    <path d="M792 470 H640 a62 62 0 0 0 0 124 H792 Z" fill="#00796B"/>
+    <circle cx="648" cy="532" r="26" fill="#FFFFFF"/>
+    <circle cx="372" cy="640" r="104" fill="#FFB300"/>
+    <circle cx="372" cy="640" r="80" fill="#FFCA28"/>
+    <text x="372" y="664" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif"
+          font-weight="800" font-size="64" fill="#8D5B00">AED</text>
+  </g></svg>
