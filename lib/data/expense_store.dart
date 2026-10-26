@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/currency.dart';
 import '../models/expense.dart';
 
 /// Holds all expenses and settings, persisted on the device.
 class ExpenseStore extends ChangeNotifier {
-  ExpenseStore._(this._prefs) {
+  ExpenseStore._(this._prefs, String deviceLocale) {
     final raw = _prefs.getString(_kExpenses);
     if (raw != null) {
       _expenses = (jsonDecode(raw) as List)
@@ -17,25 +18,34 @@ class ExpenseStore extends ChangeNotifier {
     _startingFunds = _prefs.getDouble(_kFunds) ?? 0;
     final visa = _prefs.getString(_kVisa);
     _visaExpiry = visa == null ? null : DateTime.parse(visa);
+    // Data saved before currencies were selectable was always in AED.
+    _currency = Currency.byCode(_prefs.getString(_kCurrency)) ??
+        (raw != null || _startingFunds > 0
+            ? Currency.byCode('AED')!
+            : Currency.fromLocale(deviceLocale));
     _sort();
   }
 
   static const _kExpenses = 'expenses';
   static const _kFunds = 'starting_funds';
   static const _kVisa = 'visa_expiry';
+  static const _kCurrency = 'currency';
 
-  static Future<ExpenseStore> load() async =>
-      ExpenseStore._(await SharedPreferences.getInstance());
+  static Future<ExpenseStore> load() async => ExpenseStore._(
+      await SharedPreferences.getInstance(),
+      WidgetsBinding.instance.platformDispatcher.locale.toString());
 
   final SharedPreferences _prefs;
   List<Expense> _expenses = [];
   double _startingFunds = 0;
   DateTime? _visaExpiry;
+  late Currency _currency;
 
   /// Newest first.
   List<Expense> get expenses => List.unmodifiable(_expenses);
   double get startingFunds => _startingFunds;
   DateTime? get visaExpiry => _visaExpiry;
+  Currency get currency => _currency;
 
   Future<void> add(Expense expense) async {
     _expenses.add(expense);
@@ -70,6 +80,12 @@ class ExpenseStore extends ChangeNotifier {
     } else {
       await _prefs.setString(_kVisa, date.toIso8601String());
     }
+  }
+
+  Future<void> setCurrency(Currency currency) async {
+    _currency = currency;
+    notifyListeners();
+    await _prefs.setString(_kCurrency, currency.code);
   }
 
   Future<void> clearAll() async {

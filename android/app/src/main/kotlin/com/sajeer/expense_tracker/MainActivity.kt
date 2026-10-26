@@ -1,4 +1,4 @@
-package com.sajeer.uae_expense_tracker
+package com.sajeer.expense_tracker
 
 import io.flutter.embedding.android.FlutterActivity
 

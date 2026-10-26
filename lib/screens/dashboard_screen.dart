@@ -14,7 +14,7 @@ class DashboardScreen extends StatelessWidget {
     final expenses = store.expenses;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('UAE Expenses')),
+      appBar: AppBar(title: const Text('Expense Tracker')),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
         children: [
@@ -87,20 +87,20 @@ class _SummaryCard extends StatelessWidget {
                 style: theme.textTheme.labelLarge),
             const SizedBox(height: 4),
             Text(
-              aed(headline),
+              store.currency.format(headline),
               style: theme.textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: hasFunds && headline < 0 ? scheme.error : null,
               ),
             ),
             if (hasFunds)
-              Text('of ${aed(store.startingFunds)} available',
+              Text('of ${store.currency.format(store.startingFunds)} available',
                   style: theme.textTheme.bodySmall),
             const SizedBox(height: 16),
             Row(
               children: [
-                _Stat(label: 'Today', value: aed(store.spentOn(now))),
-                _Stat(label: 'This month', value: aed(monthSpent)),
+                _Stat(label: 'Today', value: store.currency.format(store.spentOn(now))),
+                _Stat(label: 'This month', value: store.currency.format(monthSpent)),
                 _Stat(
                   label: 'Visa left',
                   value: visaDays == null
@@ -161,7 +161,7 @@ class _InsightCard extends StatelessWidget {
       message = 'Add your expenses to see how long your money will last.';
     } else {
       warning = visaDays != null && visaDays >= 0 && daysLast < visaDays;
-      message = 'At about ${aed(store.dailyAverage)} a day, your money lasts '
+      message = 'At about ${store.currency.format(store.dailyAverage)} a day, your money lasts '
           '$daysLast more days.'
           '${warning ? ' That is less than your $visaDays visa days left, so try to cut back.' : ''}';
     }

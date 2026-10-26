@@ -24,7 +24,7 @@ class ExpenseApp extends StatelessWidget {
     return StoreScope(
       store: store,
       child: MaterialApp(
-        title: 'UAE Expenses',
+        title: 'Expense Tracker',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(colorSchemeSeed: _seed),
         darkTheme: ThemeData(colorSchemeSeed: _seed, brightness: Brightness.dark),

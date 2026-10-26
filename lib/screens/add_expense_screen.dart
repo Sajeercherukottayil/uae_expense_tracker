@@ -124,9 +124,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
               ],
               style: textTheme.headlineSmall,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Amount',
-                prefixText: 'AED ',
+                prefixText: StoreScope.of(context).currency.prefix,
                 border: OutlineInputBorder(),
               ),
               validator: (v) {

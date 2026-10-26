@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-/// Categories tuned for living in the UAE on a visit visa while job hunting.
+/// Categories tuned for living abroad on a visit visa while job hunting.
 enum ExpenseCategory {
-  rent('Rent / Bed space', Icons.bed_outlined, Color(0xFF5C6BC0)),
+  rent('Rent / Housing', Icons.bed_outlined, Color(0xFF5C6BC0)),
   food('Food & Groceries', Icons.restaurant_outlined, Color(0xFFEF6C00)),
-  transport('Metro / Taxi / Bus', Icons.directions_bus_outlined, Color(0xFF00897B)),
+  transport('Transport', Icons.directions_bus_outlined, Color(0xFF00897B)),
   visa('Visa & Documents', Icons.badge_outlined, Color(0xFFC62828)),
   mobile('Mobile & Internet', Icons.sim_card_outlined, Color(0xFF6D4C41)),
   jobSearch('Job Search', Icons.work_outline, Color(0xFF1E88E5)),

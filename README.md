@@ -1,7 +1,7 @@
-# UAE Expenses
+# Expense Tracker
 
-A simple expense tracker for people living in the UAE on a visit visa while job hunting.
-Record what you spend in AED and see how long your money will last compared with the days left on your visa.
+A simple expense tracker for people living abroad on a visit visa while job hunting — works in any country and currency.
+Record what you spend in your own currency and see how long your money will last compared with the days left on your visa.
 
 <p>
   <img src="media/screenshots/01_home.png" width="200" alt="Home">
@@ -16,8 +16,9 @@ Demo video: [media/uae_expenses_demo.mp4](media/uae_expenses_demo.mp4)
 
 - **Dashboard**: remaining funds, today's and this month's spending, and visa days left.
 - **Insight card**: warns you when your money will run out before your visa does.
-- **Quick entry**: amount in AED, categories such as rent/bed space, food, metro/taxi, visa fees, job search and money sent home.
+- **Quick entry**: amount in your chosen currency (56 supported), categories such as rent/housing, food, transport, visa fees, job search and money sent home.
 - **Monthly reports**: spending by category with percentages.
+- **Any currency**: pick yours in Settings; new installs default to the phone's region.
 - **Private**: all data stays on the phone. No account, no internet needed.
 
 ## Development

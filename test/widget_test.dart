@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uae_expense_tracker/data/expense_store.dart';
-import 'package:uae_expense_tracker/main.dart';
-import 'package:uae_expense_tracker/models/expense.dart';
+import 'package:expense_tracker/data/expense_store.dart';
+import 'package:expense_tracker/main.dart';
+import 'package:expense_tracker/models/currency.dart';
+import 'package:expense_tracker/models/expense.dart';
 
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
@@ -38,6 +39,23 @@ void main() {
     final reloaded = await ExpenseStore.load();
     expect(reloaded.expenses.length, 2);
     expect(reloaded.startingFunds, 1000);
+  });
+
+  test('existing data without a saved currency stays in AED', () async {
+    SharedPreferences.setMockInitialValues({'starting_funds': 500.0});
+    final store = await ExpenseStore.load();
+    expect(store.currency.code, 'AED');
+
+    await store.setCurrency(Currency.byCode('INR')!);
+    final reloaded = await ExpenseStore.load();
+    expect(reloaded.currency.code, 'INR');
+    expect(reloaded.currency.format(1234.5), 'INR 1,234.50');
+  });
+
+  test('currency follows the device locale and its decimals', () {
+    expect(Currency.fromLocale('en_IN').code, 'INR');
+    expect(Currency.fromLocale('xx_YY').code, 'USD');
+    expect(Currency.byCode('JPY')!.format(1500), 'JPY 1,500');
   });
 
   testWidgets('add an expense from the home screen', (tester) async {

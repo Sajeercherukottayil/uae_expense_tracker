@@ -60,13 +60,13 @@ class _ReportsScreenState extends State<ReportsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Total spent', style: theme.textTheme.labelLarge),
-                  Text(aed(total),
+                  Text(store.currency.format(total),
                       style: theme.textTheme.headlineMedium
                           ?.copyWith(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 4),
                   Text(
                       '$count ${count == 1 ? 'expense' : 'expenses'} · '
-                      'avg ${aed(total / days)} / day',
+                      'avg ${store.currency.format(total / days)} / day',
                       style: theme.textTheme.bodySmall),
                 ],
               ),
@@ -111,7 +111,7 @@ class _CategoryBar extends StatelessWidget {
               Icon(category.icon, color: category.color, size: 20),
               const SizedBox(width: 8),
               Expanded(child: Text(category.label)),
-              Text(aed(amount), style: const TextStyle(fontWeight: FontWeight.w600)),
+              Text(StoreScope.of(context).currency.format(amount), style: const TextStyle(fontWeight: FontWeight.w600)),
             ],
           ),
           const SizedBox(height: 6),

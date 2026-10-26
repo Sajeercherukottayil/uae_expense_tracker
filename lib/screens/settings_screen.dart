@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../data/expense_store.dart';
+import '../models/currency.dart';
 import '../utils/format.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -11,9 +12,19 @@ class SettingsScreen extends StatelessWidget {
     final store = StoreScope.read(context);
     final value = await showDialog<double>(
       context: context,
-      builder: (_) => _FundsDialog(initial: store.startingFunds),
+      builder: (_) => _FundsDialog(
+          initial: store.startingFunds, prefix: store.currency.prefix),
     );
     if (value != null) await store.setStartingFunds(value);
+  }
+
+  Future<void> _pickCurrency(BuildContext context) async {
+    final store = StoreScope.read(context);
+    final picked = await showDialog<Currency>(
+      context: context,
+      builder: (_) => _CurrencyDialog(selected: store.currency),
+    );
+    if (picked != null) await store.setCurrency(picked);
   }
 
   Future<void> _pickVisaExpiry(BuildContext context) async {
@@ -62,10 +73,17 @@ class SettingsScreen extends StatelessWidget {
       body: ListView(
         children: [
           ListTile(
+            leading: const Icon(Icons.currency_exchange),
+            title: const Text('Currency'),
+            subtitle: Text('${store.currency.code} · ${store.currency.name}'),
+            trailing: const Icon(Icons.edit_outlined),
+            onTap: () => _pickCurrency(context),
+          ),
+          ListTile(
             leading: const Icon(Icons.account_balance_wallet_outlined),
             title: const Text('Available funds'),
             subtitle: Text(store.startingFunds > 0
-                ? aed(store.startingFunds)
+                ? store.currency.format(store.startingFunds)
                 : 'The money you have for this trip'),
             trailing: const Icon(Icons.edit_outlined),
             onTap: () => _editFunds(context),
@@ -103,9 +121,10 @@ class SettingsScreen extends StatelessWidget {
 }
 
 class _FundsDialog extends StatefulWidget {
-  const _FundsDialog({required this.initial});
+  const _FundsDialog({required this.initial, required this.prefix});
 
   final double initial;
+  final String prefix;
 
   @override
   State<_FundsDialog> createState() => _FundsDialogState();
@@ -135,8 +154,8 @@ class _FundsDialogState extends State<_FundsDialog> {
         inputFormatters: [
           FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
         ],
-        decoration: const InputDecoration(
-          prefixText: 'AED ',
+        decoration: InputDecoration(
+          prefixText: widget.prefix,
           helperText: 'Total money you have for your stay',
         ),
         onSubmitted: (_) => _submit(),
@@ -145,6 +164,73 @@ class _FundsDialogState extends State<_FundsDialog> {
         TextButton(
             onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
         FilledButton(onPressed: _submit, child: const Text('Save')),
+      ],
+    );
+  }
+}
+
+class _CurrencyDialog extends StatefulWidget {
+  const _CurrencyDialog({required this.selected});
+
+  final Currency selected;
+
+  @override
+  State<_CurrencyDialog> createState() => _CurrencyDialogState();
+}
+
+class _CurrencyDialogState extends State<_CurrencyDialog> {
+  String _query = '';
+
+  @override
+  Widget build(BuildContext context) {
+    final q = _query.trim().toLowerCase();
+    final matches = Currency.all
+        .where((c) =>
+            c.code.toLowerCase().contains(q) || c.name.toLowerCase().contains(q))
+        .toList();
+
+    return AlertDialog(
+      title: const Text('Currency'),
+      contentPadding: const EdgeInsets.only(top: 12),
+      content: SizedBox(
+        width: double.maxFinite,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: TextField(
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.search),
+                  hintText: 'Search',
+                  helperText: 'Existing amounts are not converted',
+                ),
+                onChanged: (v) => setState(() => _query = v),
+              ),
+            ),
+            Flexible(
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  for (final c in matches)
+                    ListTile(
+                      title: Text(c.name),
+                      leading: Text(c.code,
+                          style: const TextStyle(fontWeight: FontWeight.w600)),
+                      trailing: c.code == widget.selected.code
+                          ? const Icon(Icons.check)
+                          : null,
+                      onTap: () => Navigator.pop(context, c),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+            onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
       ],
     );
   }

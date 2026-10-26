@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../data/expense_store.dart';
 import '../models/expense.dart';
 import '../screens/add_expense_screen.dart';
-import '../utils/format.dart';
 
 /// One expense row. Swipe left to delete (with undo), tap to edit.
 class ExpenseTile extends StatelessWidget {
@@ -47,7 +46,7 @@ class ExpenseTile extends StatelessWidget {
         title: Text(hasNote ? expense.note : category.label,
             maxLines: 1, overflow: TextOverflow.ellipsis),
         subtitle: hasNote ? Text(category.label) : null,
-        trailing: Text(aed(expense.amount),
+        trailing: Text(StoreScope.of(context).currency.format(expense.amount),
             style: const TextStyle(fontWeight: FontWeight.w600)),
         onTap: () => Navigator.of(context).push(MaterialPageRoute(
             builder: (_) => AddExpenseScreen(existing: expense))),
